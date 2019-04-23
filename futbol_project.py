@@ -23,7 +23,30 @@ def graph_history(history):
     plt.legend()
     plt.show()
 
-df = pd.read_csv('pbp_reg_2018.csv')
+df = pd.read_csv('pbp.csv')
+df = df.replace('nan','0')
+# numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
+
+# numeric_cols = df.select_dtypes(include=numerics)
+# cols = numeric_cols.columns
+# for col in cols:
+#     df[col] = df[col].fillna(0,inplace=True)
+# df.to_csv('pbp_reg_2018.csv', sep=',', encoding='utf-8')
+
+cols = df.columns
+s = ''
+for col in cols:
+    s = s + col + ' ' +  str(df[col].unique()) + "\n----------------------\n"
+
+f = open("data.txt","w+")
+f.write(s)
+f.close()
+
+# s = []
+# cols = df.columns
+# for col in cols:
+#     s.append(col)
+# print(s[42:]) #no first 7
 # print(df.head())
 
 
@@ -48,7 +71,7 @@ def build_model(input_shape, output_shape):
 rows = df[xfeats].values 
 labels = df[yfeats].values 
 
-#TODO: randomize data Shane! for F$%# SAKE!
+#TODO: randomize data Shane! 
 # indexes = range(0, len(rows))
 
 # reshape from (, NNNN) -> (, NNNN, 1) 
@@ -83,9 +106,10 @@ m.compile(loss='binary_crossentropy',
 #split the datain numpy arrays
 
 history = m.fit(xtrain, ytrain,
-             epochs=50,
+             epochs=10,
              batch_size=64,
              validation_data=(xval, yval))
 
 
 graph_history(history)
+
